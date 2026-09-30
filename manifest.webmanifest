@@ -1,0 +1,30 @@
+{
+ "name": "Carico Magazzino",
+ "short_name": "Carico",
+ "description": "Liste fisse per il carico serale e le rimanenze",
+ "lang": "it",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "portrait",
+ "background_color": "#eef1f5",
+ "theme_color": "#2346c4",
+ "icons": [
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}
