@@ -17,7 +17,7 @@
 :root{
   --bg:#eef1f5; --surface:#ffffff; --surface-2:#e4e9f0; --ink:#141b24; --muted:#586475; --line:#d2d9e2;
   --accent:#2346c4; --accent-ink:#ffffff; --accent-soft:#dfe5fb;
-  --done:#1b7a4d; --done-soft:#dbeee3; --danger:#b3261e; --danger-soft:#f8e1df;
+  --done:#1b7a4d; --done-soft:#dbeee3; --danger:#b3261e; --danger-soft:#f8e1df; --note-bg:#fff2bf; --note-ink:#5a4600;
   --shadow:0 1px 2px rgba(20,27,36,.06),0 4px 14px rgba(20,27,36,.06);
   --f-display:"Saira Condensed","Arial Narrow","Roboto Condensed",sans-serif;
   --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
@@ -26,13 +26,13 @@
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0f141b; --surface:#18202a; --surface-2:#232d39; --ink:#e8edf3; --muted:#9aa6b5; --line:#2d3947;
   --accent:#88a2ff; --accent-ink:#0b1020; --accent-soft:#1f2a4d;
-  --done:#63d19a; --done-soft:#163225; --danger:#ff8f86; --danger-soft:#3a1d1b;
+  --done:#63d19a; --done-soft:#163225; --danger:#ff8f86; --danger-soft:#3a1d1b; --note-bg:#3a3214; --note-ink:#f3dc8a;
   --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25); color-scheme:dark;
 }}
 :root[data-theme="dark"]{
   --bg:#0f141b; --surface:#18202a; --surface-2:#232d39; --ink:#e8edf3; --muted:#9aa6b5; --line:#2d3947;
   --accent:#88a2ff; --accent-ink:#0b1020; --accent-soft:#1f2a4d;
-  --done:#63d19a; --done-soft:#163225; --danger:#ff8f86; --danger-soft:#3a1d1b;
+  --done:#63d19a; --done-soft:#163225; --danger:#ff8f86; --danger-soft:#3a1d1b; --note-bg:#3a3214; --note-ink:#f3dc8a;
   --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25); color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -102,6 +102,12 @@ button{cursor:pointer}
 .row-main.tap{cursor:pointer}
 .row-name{display:block;font-weight:700;line-height:1.25;overflow-wrap:anywhere}
 .row-sub{display:block;font-size:.82rem;color:var(--muted);margin-top:1px}
+.row-fix{display:block;font-size:.85rem;font-style:italic;color:var(--ink);margin-top:3px;overflow-wrap:anywhere}
+.notebtn{display:inline-flex;align-items:center;gap:5px;margin-top:4px;border:0;background:transparent;padding:6px 8px 6px 0;min-height:34px;font-size:.85rem;font-weight:700;color:var(--muted);text-align:left;max-width:100%}
+.notebtn svg{width:15px;height:15px;flex:none}
+.notebtn.has{background:var(--note-bg);color:var(--note-ink);padding:6px 10px;border-radius:8px;font-weight:700;overflow-wrap:anywhere}
+.gnote{margin-top:16px}
+.gnote textarea.in{min-height:84px}
 .row.is-done .chk{background:var(--done);border-color:var(--done);color:var(--surface)}
 .row.is-done .row-name{color:var(--muted);text-decoration:line-through;text-decoration-thickness:2px}
 .row.is-done{background:var(--done-soft)}
@@ -138,6 +144,7 @@ textarea.in{min-height:140px;resize:vertical;line-height:1.4}
 .erow .top-line .in{flex:1;min-width:0;font-weight:700}
 .erow .sub-line{display:grid;grid-template-columns:1fr 7.5em;gap:8px}
 .erow .sub-line.one{grid-template-columns:1fr}
+.erow .mini.wide{grid-column:1/-1}
 .erow .mini{font-size:.78rem;color:var(--muted);display:grid;gap:4px}
 .ibtn{flex:none;width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--bg);display:grid;place-items:center;font-size:1.1rem;color:var(--muted)}
 .ibtn:disabled{opacity:.35}
@@ -200,7 +207,7 @@ function fmtDate(ts){ var d = new Date(ts); return dFmt.format(d) + " · " + tFm
 function fmtDay(ts){ return new Intl.DateTimeFormat("it-IT", {weekday:"short", day:"numeric", month:"short"}).format(new Date(ts)); }
 
 /* ---------- dati ---------- */
-function item(name, unit, def, ex){ return {id:uid(), name:name, unit:unit||"", def:def||0, ex:!!ex}; }
+function item(name, unit, def, ex, note){ return {id:uid(), name:name, unit:unit||"", def:def||0, ex:!!ex, note:note||""}; }
 function seed(){
   return { v:1, lists:[
     { id:uid(), name:"Carico serale", qty:true, check:true, cur:{}, history:[], items:[
@@ -208,7 +215,7 @@ function seed(){
       item("Coca-Cola lattine","casse",1,1), item("Birra bottiglia 33 cl","casse",1,1),
       item("Vino bianco della casa","bottiglie",6,1), item("Vino rosso della casa","bottiglie",6,1),
       item("Succhi di frutta","pz",12,1), item("Limoni","pz",10,1),
-      item("Tovaglioli","pacchi",2,1), item("Ghiaccio","sacchi",2,1)
+      item("Tovaglioli","pacchi",2,1), item("Ghiaccio","sacchi",2,1,"Dal congelatore grande, non da quello del bar")
     ]},
     { id:uid(), name:"Rimanenze settimanali", qty:true, check:false, cur:{}, history:[], items:[
       item("Vodka","bottiglie",0,1), item("Gin","bottiglie",0,1), item("Rum","bottiglie",0,1),
@@ -230,33 +237,35 @@ function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); storageOK =
 function normalize(d){
   if (!d || !Array.isArray(d.lists)) return null;
   var lists = d.lists.filter(function(l){ return l && typeof l.name === "string" && Array.isArray(l.items); }).map(function(l){
-    return { id:String(l.id||uid()), name:l.name, qty:l.qty!==false, check:!!l.check, cur:(l.cur && typeof l.cur==="object")?l.cur:{},
+    return { id:String(l.id||uid()), name:l.name, qty:l.qty!==false, check:!!l.check, cur:(l.cur && typeof l.cur==="object")?l.cur:{}, gnote:typeof l.gnote==="string"?l.gnote:"",
       history:Array.isArray(l.history)?l.history:[],
-      items:l.items.filter(function(i){ return i && typeof i.name==="string"; }).map(function(i){ return {id:String(i.id||uid()), name:i.name, unit:i.unit||"", def:num(i.def), ex:!!i.ex}; }) };
+      items:l.items.filter(function(i){ return i && typeof i.name==="string"; }).map(function(i){ return {id:String(i.id||uid()), name:i.name, unit:i.unit||"", def:num(i.def), ex:!!i.ex, note:typeof i.note==="string"?i.note:""}; }) };
   });
   if (!lists.length && d.lists.length) return null;
   return { v:1, lists:lists };
 }
 var S = load();
 function getList(id){ for (var i=0;i<S.lists.length;i++) if (S.lists[i].id===id) return S.lists[i]; return null; }
-function cur(l, it){ var c = l.cur[it.id]; return c ? c : {q:it.def||0, d:false, t:false}; }
-function setCur(l, it, patch){ var c = cur(l,it); var n = {q:c.q, d:c.d, t:true}; for (var k in patch) n[k]=patch[k]; l.cur[it.id]=n; save(); }
+function cur(l, it){ var c = l.cur[it.id]; return c ? c : {q:it.def||0, d:false, t:false, n:""}; }
+function setCur(l, it, patch){ var c = cur(l,it); var n = {q:c.q, d:c.d, t:true, n:c.n||""}; for (var k in patch) n[k]=patch[k]; l.cur[it.id]=n; save(); }
 function kindLabel(l){ return l.qty && l.check ? "quantità e spunta" : l.qty ? "solo quantità" : "solo spunta"; }
 function stats(l){
   var total = l.items.length, done = 0, touched = 0;
   l.items.forEach(function(it){ var c = l.cur[it.id]; if (c && c.d) done++; if (c && c.t) touched++; });
   return {total:total, done:done, touched:touched};
 }
-function rowsOf(l){ return l.items.map(function(it){ var c = cur(l,it); return {n:it.name, u:it.unit, q:c.q, d:c.d}; }); }
-function listText(name, qty, check, rows, ts){
+function rowsOf(l){ return l.items.map(function(it){ var c = cur(l,it); return {n:it.name, u:it.unit, q:c.q, d:c.d, note:c.n||""}; }); }
+function listText(name, qty, check, rows, ts, gnote){
   var out = [name + " – " + fmtDate(ts), ""], zero = [];
   rows.forEach(function(r){
     if (qty) {
-      if (r.q > 0) out.push("• " + r.n + ": " + fmtNum(r.q) + (r.u ? " " + r.u : "") + (check && r.d ? " ✓" : ""));
+      var nt = r.note ? " (" + r.note + ")" : "";
+      if (r.q > 0 || r.note) out.push("• " + r.n + ": " + fmtNum(r.q) + (r.u ? " " + r.u : "") + (check && r.d ? " ✓" : "") + nt);
       else zero.push(r.n);
-    } else out.push((r.d ? "✓ " : "☐ ") + r.n);
+    } else out.push((r.d ? "✓ " : "☐ ") + r.n + (r.note ? " (" + r.note + ")" : ""));
   });
   if (qty && zero.length) out.push("", "A zero: " + zero.join(", "));
+  if (gnote && gnote.trim()) out.push("", "Note: " + gnote.trim());
   return out.join("\n");
 }
 
@@ -313,7 +322,9 @@ function rowHTML(l, it){
   if (l.qty && it.def) sub.push("di solito " + fmtNum(it.def));
   var h = '<li class="row' + (l.check ? "" : " no-chk") + (l.check && c.d ? " is-done" : "") + '" data-item="' + it.id + '">';
   if (l.check) h += '<button class="chk" data-act="toggle" aria-pressed="' + (c.d ? "true" : "false") + '" aria-label="Segna ' + esc(it.name) + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>';
-  h += '<div class="row-main' + (l.check ? ' tap" data-act="toggle' : '') + '"><span class="row-name">' + esc(it.name) + '</span>' + (sub.length ? '<span class="row-sub">' + sub.join(" · ") + '</span>' : '') + '</div>';
+  h += '<div class="row-main' + (l.check ? ' tap" data-act="toggle' : '') + '"><span class="row-name">' + esc(it.name) + '</span>' + (sub.length ? '<span class="row-sub">' + sub.join(" · ") + '</span>' : '') +
+    (it.note ? '<span class="row-fix">' + esc(it.note) + '</span>' : '') +
+    '<button class="notebtn' + (c.n ? ' has' : '') + '" data-act="note" aria-label="' + (c.n ? 'Modifica nota: ' : 'Aggiungi nota a ') + esc(c.n || it.name) + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg><span>' + (c.n ? esc(c.n) : 'Nota') + '</span></button></div>';
   if (l.qty) h += '<div class="step"><button data-act="dec" aria-label="Meno">−</button><input class="qty' + (c.q ? "" : " zero") + '" id="q-' + it.id + '" inputmode="decimal" autocomplete="off" aria-label="Quantità ' + esc(it.name) + '" value="' + fmtNum(c.q) + '"><button data-act="inc" aria-label="Più">+</button></div>';
   return h + '</li>';
 }
@@ -325,6 +336,7 @@ function renderList(l){
   }
   h += '<div class="progress"><div class="progress-text"><span id="pText"></span><span id="pSide"></span></div><div class="bar"><i id="pBar"></i></div></div>';
   h += '<ul class="items">' + l.items.map(function(it){ return rowHTML(l,it); }).join("") + '</ul>';
+  h += '<div class="field gnote"><label for="g-note">Note per questa volta</label><textarea class="in" id="g-note" placeholder="Es. finite le cannucce, da ordinare">' + esc(l.gnote || "") + '</textarea></div>';
   h += '<button class="linkbtn" data-act="history">Storico (' + l.history.length + ')</button>';
   app.innerHTML = h;
   bar.innerHTML = '<div class="actionbar"><div class="inner"><button class="btn ghost" data-act="reset">Azzera</button><button class="btn" data-act="share">Condividi</button><button class="btn primary" data-act="saveHist">Salva</button></div></div>';
@@ -351,10 +363,11 @@ function renderEdit(l){
     h += '<button class="ibtn" data-act="up" aria-label="Sposta su"' + (i === 0 ? " disabled" : "") + '>↑</button><button class="ibtn" data-act="down" aria-label="Sposta giù"' + (i === l.items.length-1 ? " disabled" : "") + '>↓</button><button class="ibtn del" data-act="delItem" aria-label="Elimina">✕</button></div>';
     h += '<div class="sub-line' + (l.qty ? "" : " one") + '"><label class="mini">Unità<input class="in" id="e-u-' + it.id + '" data-f="unit" list="units" value="' + esc(it.unit) + '" autocomplete="off"></label>';
     if (l.qty) h += '<label class="mini">Di solito<input class="in" id="e-d-' + it.id + '" data-f="def" inputmode="decimal" value="' + (it.def ? fmtNum(it.def) : "") + '" placeholder="0"></label>';
+    h += '<label class="mini wide">Nota fissa (la vedi sempre sotto il nome)<input class="in" id="e-t-' + it.id + '" data-f="note" value="' + esc(it.note || "") + '" placeholder="Es. scaffale in fondo a sinistra" autocomplete="off"></label>';
     h += '</div></li>';
   });
   h += '</ul>';
-  h += '<details class="more"><summary>Incolla tanti prodotti insieme</summary><p class="small">Un prodotto per riga. Se vuoi aggiungi unità e quantità abituale separate dal punto e virgola.<br>Esempio: <em>Acqua naturale; casse; 2</em></p><textarea class="in" id="bulk" placeholder="Acqua naturale; casse; 2&#10;Coca-Cola; casse; 1&#10;Limoni"></textarea><div class="btn-row" style="margin-top:8px"><button class="btn primary" data-act="bulkAdd">Aggiungi tutti</button></div></details>';
+  h += '<details class="more"><summary>Incolla tanti prodotti insieme</summary><p class="small">Un prodotto per riga. Se vuoi aggiungi unità, quantità abituale e nota fissa separate dal punto e virgola.<br>Esempio: <em>Acqua naturale; casse; 2; scaffale in fondo</em></p><textarea class="in" id="bulk" placeholder="Acqua naturale; casse; 2&#10;Coca-Cola; casse; 1&#10;Limoni"></textarea><div class="btn-row" style="margin-top:8px"><button class="btn primary" data-act="bulkAdd">Aggiungi tutti</button></div></details>';
   h += '<div class="danger-zone"><button class="btn" data-act="dupList">Duplica questa lista</button><button class="btn danger" data-act="delList">Elimina questa lista</button></div>';
   app.innerHTML = h; bar.innerHTML = "";
 }
@@ -364,7 +377,7 @@ function renderHistory(l){
   else {
     h += '<div class="hist">';
     l.history.forEach(function(e){
-      var txt = listText(l.name, e.qty, e.check, e.rows, e.at);
+      var txt = listText(l.name, e.qty, e.check, e.rows, e.at, e.gnote);
       h += '<details data-h="' + e.id + '"><summary><span>' + esc(fmtDay(e.at)) + '</span><span>' + tFmt.format(new Date(e.at)) + '</span></summary><pre>' + esc(txt.split("\n").slice(2).join("\n")) + '</pre><div class="btn-row"><button class="btn" data-act="shareHist">Condividi</button><button class="btn danger" data-act="delHist">Elimina</button></div></details>';
     });
     h += '</div>';
@@ -417,9 +430,20 @@ function newListModal(){
       S.lists.push(l); save(); closeModal(); go({name:"edit", id:l.id});
     }}]);
 }
+function noteModal(l, it){
+  var c = cur(l, it);
+  function put(text){
+    var cc = cur(l, it); l.cur[it.id] = {q:cc.q, d:cc.d, t:!!cc.t, n:text}; save();
+    var y = window.scrollY; closeModal(); render(); window.scrollTo(0, y);
+  }
+  var acts = [{label:"Annulla", kind:"ghost", fn:closeModal}];
+  if (c.n) acts.push({label:"Cancella nota", kind:"danger", fn:function(){ put(""); toast("Nota cancellata"); }});
+  acts.push({label:"Salva nota", kind:"primary", fn:function(){ put((document.getElementById("n-text").value || "").trim()); }});
+  openModal("Nota: " + it.name, '<p>Vale solo per questa volta e finisce nel testo che condividi. Quando azzeri la lista sparisce. Per una nota che resta sempre, usa Modifica.</p><textarea class="in" id="n-text" style="min-height:110px" placeholder="Es. ne restano solo 2, avvisare">' + esc(c.n || "") + '</textarea>', acts);
+}
 function addItems(l, entries){
   var n = 0;
-  entries.forEach(function(e){ if (!e.name) return; l.items.push(item(e.name, e.unit, e.def)); n++; });
+  entries.forEach(function(e){ if (!e.name) return; l.items.push(item(e.name, e.unit, e.def, false, e.note)); n++; });
   if (n) save();
   return n;
 }
@@ -474,14 +498,15 @@ document.addEventListener("click", function(ev){
       setCur(l, it, {q:q}); var inp = document.getElementById("q-" + it.id); inp.value = fmtNum(q); inp.classList.toggle("zero", !q);
       updateProgress(l); break;
     case "reset":
-      var prev = JSON.stringify(l.cur); l.cur = {}; save(); render();
-      toast("Lista azzerata", "Annulla", function(){ l.cur = JSON.parse(prev); save(); render(); }); break;
-    case "share": shareText(listText(l.name, l.qty, l.check, rowsOf(l), Date.now()), l.name); break;
+      var prev = JSON.stringify(l.cur), prevG = l.gnote || ""; l.cur = {}; l.gnote = ""; save(); render();
+      toast("Lista azzerata", "Annulla", function(){ l.cur = JSON.parse(prev); l.gnote = prevG; save(); render(); }); break;
+    case "note": it = rowItem(el, l); if (!it) break; noteModal(l, it); break;
+    case "share": shareText(listText(l.name, l.qty, l.check, rowsOf(l), Date.now(), l.gnote), l.name); break;
     case "saveHist":
-      l.history.unshift({id:uid(), at:Date.now(), qty:l.qty, check:l.check, rows:rowsOf(l)}); if (l.history.length > 60) l.history.length = 60; save(); render();
-      toast("Salvata nello storico", "Azzera ora", function(){ l.cur = {}; save(); render(); toast("Lista azzerata"); }); break;
+      l.history.unshift({id:uid(), at:Date.now(), qty:l.qty, check:l.check, rows:rowsOf(l), gnote:l.gnote || ""}); if (l.history.length > 60) l.history.length = 60; save(); render();
+      toast("Salvata nello storico", "Azzera ora", function(){ l.cur = {}; l.gnote = ""; save(); render(); toast("Lista azzerata"); }); break;
     case "shareHist": var hid = el.closest("[data-h]").getAttribute("data-h");
-      l.history.forEach(function(e){ if (e.id === hid) shareText(listText(l.name, e.qty, e.check, e.rows, e.at), l.name); }); break;
+      l.history.forEach(function(e){ if (e.id === hid) shareText(listText(l.name, e.qty, e.check, e.rows, e.at, e.gnote), l.name); }); break;
     case "delHist": var did = el.closest("[data-h]").getAttribute("data-h"), idx = -1;
       l.history.forEach(function(e, i){ if (e.id === did) idx = i; });
       if (idx > -1) { var removed = l.history.splice(idx, 1)[0]; save(); render(); toast("Salvataggio eliminato", "Annulla", function(){ l.history.splice(idx, 0, removed); save(); render(); }); }
@@ -492,7 +517,7 @@ document.addEventListener("click", function(ev){
       addItems(l, [{name:nm.value.trim(), unit:un.value.trim(), def:0}]); render();
       var nn = document.getElementById("a-name"); if (nn) nn.focus(); toast("Aggiunto"); break;
     case "bulkAdd":
-      var lines = document.getElementById("bulk").value.split(/\r?\n/).map(function(s){ var p = s.split(";"); return {name:(p[0]||"").trim(), unit:(p[1]||"").trim(), def:num(p[2]||0)}; });
+      var lines = document.getElementById("bulk").value.split(/\r?\n/).map(function(s){ var p = s.split(";"); return {name:(p[0]||"").trim(), unit:(p[1]||"").trim(), def:num(p[2]||0), note:p.slice(3).join(";").trim()}; });
       var added = addItems(l, lines); render(); toast(added ? "Aggiunti " + added + " prodotti" : "Nessun prodotto da aggiungere"); break;
     case "up": case "down": it = rowItem(el, l); if (!it) break;
       var i0 = l.items.indexOf(it), j = act === "up" ? i0 - 1 : i0 + 1;
@@ -518,10 +543,11 @@ document.addEventListener("click", function(ev){
 document.addEventListener("input", function(ev){
   var t = ev.target, l = view.id ? getList(view.id) : null; if (!l) return;
   if (t.id === "f-name") { l.name = t.value.trim() || "Senza nome"; save(); return; }
+  if (t.id === "g-note") { l.gnote = t.value; save(); return; }
   if (t.classList.contains("qty")) { var it = rowItem(t, l); if (it) { var q = num(t.value); setCur(l, it, {q:q}); t.classList.toggle("zero", !q); updateProgress(l); } return; }
   var f = t.getAttribute("data-f");
   if (f) { var it2 = rowItem(t, l); if (!it2) return;
-    if (f === "name") it2.name = t.value.trim() || "Senza nome"; else if (f === "unit") it2.unit = t.value.trim(); else if (f === "def") it2.def = num(t.value);
+    if (f === "name") it2.name = t.value.trim() || "Senza nome"; else if (f === "unit") it2.unit = t.value.trim(); else if (f === "def") it2.def = num(t.value); else if (f === "note") it2.note = t.value.trim();
     it2.ex = false; save(); }
 });
 document.addEventListener("change", function(ev){
